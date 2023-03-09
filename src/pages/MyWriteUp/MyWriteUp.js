@@ -1,46 +1,39 @@
-import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import React, { useContext, useState } from 'react'
 import PostPreviewCard from '../../components/Cards/PostPreviewCard'
+import WritePostModal from '../../components/Modals/WritePostModal'
+import { AuthContext } from '../../context/AuthProvider'
 
 const MyWriteUp = () => {
-    const posts = [
-        {
-            "title": "The Benefits of Regular Exercise",
-            "body": "Exercise is essential for maintaining good physical and mental health. Regular exercise can improve your cardiovascular health, help you lose weight, and reduce your risk of developing chronic diseases such as diabetes and heart disease. Exercise can also reduce stress, improve your mood, and boost your energy levels. So if you're not already exercising regularly, it's time to start!",
-            "date": "Mar 3, 2023",
-            "time": "1:37 PM",
-            "author": "chatGPT"
-        },
-        {
-            "title": "Tips for Building Strong Relationships",
-            "body": "Building strong relationships is essential for living a happy and fulfilled life. Whether it's with family, friends, or romantic partners, strong relationships require effort and commitment. Here are some tips to help you build and maintain strong relationships:<ol><li>Communicate openly and honestly.</li><li>Listen actively and show empathy.</li><li>Practice forgiveness.</li><li>Spend quality time together.</li><li>Show appreciation and gratitude.</li></ol><br/>By following these tips, you can build and maintain strong relationships that will enrich your life.",
-            "date": "Mar 3, 2023",
-            "time": "1:37 PM",
-            "author": "chatGPT"
-        },
-        {
-            "title": "The Importance of Time Management",
-            "body": "Time is one of the most valuable resources we have, and it's essential to manage it effectively if we want to achieve our goals and live a productive life. Effective time management can help you reduce stress, increase productivity, and improve your work-life balance. Here are some tips for effective time management:<ol><li>Set clear goals and prioritize your tasks.</li><li>Create a schedule and stick to it.</li><li>Avoid distractions and procrastination.</li><li>Take breaks and recharge your energy.</li><li>Learn to say 'no' when necessary.</li></ol><br/>By managing your time effectively, you can achieve more in less time and enjoy a more balanced and fulfilling life.",
-            "date": "Mar 3, 2023",
-            "time": "1:37 PM",
-            "author": "chatGPT"
-        },
-        {
-            "title": "The Importance of Time Management",
-            "body": "Time is one of the most valuable resources we have, and it's essential to manage it effectively if we want to achieve our goals and live a productive life. Effective time management can help you reduce stress, increase productivity, and improve your work-life balance. Here are some tips for effective time management:<ol><li>Set clear goals and prioritize your tasks.</li><li>Create a schedule and stick to it.</li><li>Avoid distractions and procrastination.</li><li>Take breaks and recharge your energy.</li><li>Learn to say 'no' when necessary.</li></ol><br/>By managing your time effectively, you can achieve more in less time and enjoy a more balanced and fulfilling life.",
-            "date": "Mar 3, 2023",
-            "time": "1:37 PM",
-            "author": "chatGPT"
-        },
-    ]
+    const [modal, setModal] = useState(false)
+    const { user } = useContext(AuthContext)
+    const { data: myPosts = [], refetch } = useQuery({
+        queryKey: ['myPosts'],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
+            const data = await res.json()
+            return data
+        }
+    })
     return (
         <section className='max-w-[1280px] mx-auto px-3 lg:gap-10 md:gap-10 pt-8'>
             <h1 className='text-4xl font-bold text-center'>My Write Up</h1>
-            <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-7 mt-6'>
+
             {
-                posts.map((post, index)=><PostPreviewCard key={index} index={index} post={post} />)
+                myPosts?.length > 0 ?
+                    <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-7 mt-6'>
+                        {
+                            myPosts.map((post, index) => <PostPreviewCard key={index} index={index} post={post} postRefetch={refetch} />)
+                        }
+                    </div> : <div className='flex flex-col items-center lg:py-32 md:py-16 py-8'>
+                        <h1 className='text-3xl mt-8'>You have not write any post yet!</h1>
+                        <label htmlFor="write-post-modal" onClick={() => setModal(true)} className='btn btn-wide text-white normal-case mt-6'>Write a Post +</label>
+                        {
+                            modal && <WritePostModal setModal={setModal} />
+                        }
+                    </div>
             }
-            </div>
-        </section>
+        </section >
     )
 }
 

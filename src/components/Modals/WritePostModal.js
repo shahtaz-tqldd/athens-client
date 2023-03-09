@@ -18,10 +18,11 @@ const WritePostModal = ({ setModal }) => {
     }
     const date = format(new Date(), 'PP')
     const time = format(new Date(), 'p')
+    const createdAt = new Date()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const post = { ...formData, author: user?.displayName, date, time }
+        const post = { ...formData, author: user?.displayName, authorEmail:user?.email, date, time, createdAt }
         fetch('http://localhost:5000/posts', {
             method: 'POST',
             headers: {
