@@ -23,7 +23,7 @@ const WritePostModal = ({ setModal }) => {
     const handleSubmit = (event) => {
         event.preventDefault()
         const post = { ...formData, author: user?.displayName, authorEmail:user?.email, date, time, createdAt }
-        fetch('http://localhost:5000/posts', {
+        fetch('https://athens-server.vercel.app/posts', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

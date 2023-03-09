@@ -10,7 +10,7 @@ const PostPreviewCard = ({ post, index, postRefetch }) => {
     const { title, content, time, date, _id } = post
     const colors = ["#E1EEDD", "#E3DFFD", "#FDFDBD", "#FFDDD2"]
     const handleDeletePost = (id) => {
-        fetch(`http://localhost:5000/posts/${id}`, {
+        fetch(`https://athens-server.vercel.app/posts/${id}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
