@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
     createUserWithEmailAndPassword,
     getAuth,
@@ -16,6 +17,16 @@ export const AuthContext = createContext()
 const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
+    // LOAD POSTS
+    const { data: posts = [], refetch } = useQuery({
+        queryKey: ['posts'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:5000/posts')
+            const data = await res.json()
+            return data
+        }
+    })
+
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
 
@@ -64,6 +75,7 @@ const AuthProvider = ({ children }) => {
     }, [])
 
     const authInfo = {
+        posts, refetch,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
     return (

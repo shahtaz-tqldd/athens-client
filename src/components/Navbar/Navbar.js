@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context/AuthProvider'
 import Logo from '../Logo/Logo'
 
 const Navbar = () => {
+    const { user, logout } = useContext(AuthContext)
+    const handleLogout = () => {
+        logout()
+            .then(() => { toast.error("You are logged out") })
+            .catch(err => console.error(err))
+    }
     const navItems = <>
         <li><Link to='/'>Home</Link></li>
         <li><Link to='/'>Posts</Link></li>
@@ -27,7 +35,11 @@ const Navbar = () => {
                     <input type="text" placeholder="Search Post" className="input input-bordered w-[300px] bg-[#ECF2FF]" />
                 </div>
                 <div className="navbar-end">
-                    <Link to='/login' className="btn btn-sm btn-neutral btn-outline normal-case px-5 rounded-[6px]">Sign In</Link>
+                    {
+                        user?.displayName ?
+                            <button onClick={handleLogout} className="btn btn-sm btn-error normal-case px-4 rounded-sm text-white">Logout</button>
+                            : <Link to='/login' className="btn btn-sm btn-neutral btn-outline normal-case px-4 rounded-sm">Sign In</Link>
+                    }
                 </div>
             </div>
         </header>

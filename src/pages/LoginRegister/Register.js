@@ -42,7 +42,7 @@ const Register = () => {
   return (
     <section className='flex lg:flex-row'>
       <div className='lg:w-[45%] h-[100vh] bg-[#BAD7E9] flex items-center justify-center'>
-        <img src="https://i.pinimg.com/originals/6b/1b/22/6b1b22573f9f3d4bba11a9fa5cb45652.png" alt="" className='w-2/3' data-aos="fade-up"/>
+        <img src="https://cdni.iconscout.com/illustration/premium/thumb/attract-customers-5650437-4708034.png?f=webp" alt="" className='w-2/3' data-aos="fade-up"/>
       </div>
       <div className='lg:w-[55%] flex flex-col items-center justify-center'>
       <div className='scale-125 mb-8'>

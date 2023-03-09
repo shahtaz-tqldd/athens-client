@@ -1,8 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../layouts/Main";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AllPosts from "../pages/Admin/AllPosts/AllPosts";
+import Users from "../pages/Admin/Users/Users";
 import Homepage from "../pages/Homepage/Homepage";
 import Login from "../pages/LoginRegister/Login";
 import Register from "../pages/LoginRegister/Register";
+import MyWriteUp from "../pages/MyWriteUp/MyWriteUp";
+import SavedPost from "../pages/SavedPost/SavedPost";
 
 export const routes = createBrowserRouter([
     {
@@ -12,7 +17,29 @@ export const routes = createBrowserRouter([
             {
                 path:'/',
                 element:<Homepage/>
-            }
+            },
+            {
+                path:'/saved-post',
+                element:<SavedPost/>
+            },
+            {
+                path:'/my-write-up',
+                element:<MyWriteUp/>
+            },
+            {
+                path:'/admin',
+                element:<AdminDashboard/>,
+                children:[
+                    {
+                        path:'/admin',
+                        element: <AllPosts/>
+                    },
+                    {
+                        path:'/admin/users',
+                        element: <Users/>
+                    },
+                ]
+            },
         ]
     },
     {
