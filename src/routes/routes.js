@@ -7,47 +7,53 @@ import Homepage from "../pages/Homepage/Homepage";
 import Login from "../pages/LoginRegister/Login";
 import Register from "../pages/LoginRegister/Register";
 import MyWriteUp from "../pages/MyWriteUp/MyWriteUp";
+import PostScreen from "../pages/Posts/PostScreen";
 import SavedPost from "../pages/SavedPost/SavedPost";
 
 export const routes = createBrowserRouter([
     {
-        path:'/',
-        element: <Main/>,
+        path: '/',
+        element: <Main />,
         children: [
             {
-                path:'/',
-                element:<Homepage/>
+                path: '/',
+                element: <Homepage />
             },
             {
-                path:'/saved-post',
-                element:<SavedPost/>
+                path: '/posts/:id',
+                loader: async ({ params }) => await fetch(`http://localhost:5000/posts/${params.id}`),
+                element: <PostScreen />
             },
             {
-                path:'/my-write-up',
-                element:<MyWriteUp/>
+                path: '/saved-post',
+                element: <SavedPost />
             },
             {
-                path:'/admin',
-                element:<AdminDashboard/>,
-                children:[
+                path: '/my-write-up',
+                element: <MyWriteUp />
+            },
+            {
+                path: '/admin',
+                element: <AdminDashboard />,
+                children: [
                     {
-                        path:'/admin',
-                        element: <AllPosts/>
+                        path: '/admin',
+                        element: <AllPosts />
                     },
                     {
-                        path:'/admin/users',
-                        element: <Users/>
+                        path: '/admin/users',
+                        element: <Users />
                     },
                 ]
             },
         ]
     },
     {
-        path:'/login',
-        element: <Login/>,
+        path: '/login',
+        element: <Login />,
     },
     {
-        path:'/Register',
-        element: <Register/>,
+        path: '/Register',
+        element: <Register />,
     }
 ])

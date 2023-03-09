@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../../../context/AuthProvider'
 
 const AllPosts = () => {
+  const { posts } = useContext(AuthContext)
   return (
     <div className='max-w-[900px] mx-auto'>
       <h1 className='font-bold mt-2 mb-4'>All Posts</h1>
@@ -9,30 +11,21 @@ const AllPosts = () => {
           <thead>
             <tr>
               <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Blue</td>
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>Hart Hagerty</td>
-              <td>Desktop Support Technician</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>Brice Swyre</td>
-              <td>Tax Accountant</td>
-              <td>Red</td>
-            </tr>
+            {
+              posts?.map((post, index) => <tr key={index}>
+                <th>{index + 1}</th>
+                <td>{post?.title}</td>
+                <td>{post?.author}</td>
+                <td><button>Delete</button></td>
+              </tr>
+              )
+            }
           </tbody>
         </table>
       </div>
