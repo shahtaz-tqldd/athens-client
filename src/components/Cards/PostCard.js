@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { HiUser } from 'react-icons/hi'
+import '../../assets/styles/post-card.css'
 
 const PostCard = ({ post }) => {
     const { title, body, date, time, author } = post

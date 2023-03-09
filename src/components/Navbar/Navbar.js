@@ -24,10 +24,10 @@ const Navbar = () => {
                     <Logo />
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                    <input type="text" placeholder="Search Post" className="input input-bordered w-[300px] bg-[#DDF7E3]" />
+                    <input type="text" placeholder="Search Post" className="input input-bordered w-[300px] bg-[#ECF2FF]" />
                 </div>
                 <div className="navbar-end">
-                    <Link to className="btn btn-sm btn-neutral btn-outline normal-case px-5 rounded-[6px]">Sign In</Link>
+                    <Link to='/login' className="btn btn-sm btn-neutral btn-outline normal-case px-5 rounded-[6px]">Sign In</Link>
                 </div>
             </div>
         </header>
