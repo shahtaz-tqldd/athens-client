@@ -1,30 +1,28 @@
-import { format } from 'date-fns'
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthProvider'
 
-const WritePostModal = ({ setModal }) => {
-    const { user, refetch } = useContext(AuthContext)
+const PostUpdateModal = ({ post, setPostUpdate, postRefetch }) => {
+    const { refetch } = useContext(AuthContext)
+    const { title, content, _id } = post
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
-        title: '',
-        content: '',
+        title: title,
+        content: content,
     })
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
         setFormData({ ...formData, [name]: value })
     }
-    const date = format(new Date(), 'PP')
-    const time = format(new Date(), 'p')
-    const createdAt = new Date()
+    const updatedAt = new Date()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const post = { ...formData, author: user?.displayName, authorEmail:user?.email, date, time, createdAt }
-        fetch('http://localhost:5000/posts', {
-            method: 'POST',
+        const post = { ...formData, updatedAt }
+        fetch(`http://localhost:5000/posts/${_id}`, {
+            method: 'PUT',
             headers: {
                 'Content-type': 'application/json'
             },
@@ -32,23 +30,20 @@ const WritePostModal = ({ setModal }) => {
         })
             .then(res => res.json())
             .then(() => {
-                toast.success("You just made a post!")
-                navigate('/')
-                setModal(false)
-                setFormData({ title: '', content: '' })
+                toast.success("Your post is updated")
+                navigate('/my-write-up')
+                setPostUpdate(null)
+                postRefetch()
                 refetch()
             })
     }
-
     return (
         <div>
-            <input type="checkbox" id="write-post-modal" className="modal-toggle" />
+            <input type="checkbox" id="post-update-modal" className="modal-toggle" />
             <div className="modal">
                 <div className="modal-box relative">
-                    <label htmlFor="write-post-modal" className="btn btn-sm btn-circle absolute right-2 top-2">
-                        ✕
-                    </label>
-                    <h1 className='font-bold mb-3'>Write Your Thoughts</h1>
+                    <label onClick={() => setPostUpdate(null)} htmlFor="post-update-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                    <h1 className='font-bold mb-3'>Update Your Post</h1>
                     <form onSubmit={handleSubmit}>
                         <input
                             type="text"
@@ -67,7 +62,7 @@ const WritePostModal = ({ setModal }) => {
                         ></textarea>{' '}
                         <br />
                         <button type="submit" className="btn btn-wide mt-4 normal-case text-white">
-                            Post
+                            Update
                         </button>
                     </form>
                 </div>
@@ -76,4 +71,4 @@ const WritePostModal = ({ setModal }) => {
     )
 }
 
-export default WritePostModal
+export default PostUpdateModal
