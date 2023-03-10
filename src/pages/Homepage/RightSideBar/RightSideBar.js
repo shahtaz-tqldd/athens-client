@@ -5,6 +5,7 @@ import { AuthContext } from '../../../context/AuthProvider'
 
 const RightSideBar = () => {
   const [modal, setModal] = useState(false)
+  const { isAdmin } = useContext(AuthContext)
   const menuItems = [
     {
       link: '/my-write-up',
@@ -15,12 +16,7 @@ const RightSideBar = () => {
       link: '/saved-post',
       item: 'Saved Post',
       icon: 'https://cdn.lordicon.com/eanmttmw.json'
-    },
-    {
-      link: '/admin',
-      item: 'Admin Pannel',
-      icon: 'https://cdn.lordicon.com/mrdiiocb.json'
-    },
+    }
   ]
   const { user } = useContext(AuthContext)
   if (!user?.email) {
@@ -47,7 +43,20 @@ const RightSideBar = () => {
         </Link>
         )
       }
-      <label htmlFor="write-post-modal" onClick={()=>setModal(true)} className='btn w-full text-white normal-case mt-6'>Write a Post +</label>
+      {
+        isAdmin &&
+        <Link to='/admin' className='flex items-center gap-2 mb-2'>
+          <lord-icon
+            target="a"
+            src="https://cdn.lordicon.com/mrdiiocb.json"
+            trigger="hover"
+            colors="primary:#66a1ee"
+            style={{ height: "20px", width: "20px" }}>
+          </lord-icon>
+          <span className='textBlue'>Admin Pannel</span>
+        </Link>
+      }
+      <label htmlFor="write-post-modal" onClick={() => setModal(true)} className='btn w-full text-white normal-case mt-6'>Write a Post +</label>
       {
         modal && <WritePostModal setModal={setModal} />
       }

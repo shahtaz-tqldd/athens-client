@@ -17,7 +17,7 @@ export const AuthContext = createContext()
 const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
-    // LOAD POSTS
+    // LOAD ALL POSTS
     const { data: posts = [], refetch } = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
@@ -73,9 +73,20 @@ const AuthProvider = ({ children }) => {
         })
         return () => unsubscribe()
     }, [])
-
+    //SETTING ADMIN AS A HARD CODE
+    const [isAdmin, setIsAdmin] = useState(false)
+    useEffect(() => {
+        const admin = {
+            displayName: 'Athens Admin',
+            email: 'admin@athens.com'
+        }
+        if (user?.email === admin?.email) {
+            setIsAdmin(true)
+        } else { setIsAdmin(false) }
+    }, [user])
+    // SENDING THE AUTH INFO 
     const authInfo = {
-        posts, refetch,
+        posts, refetch, isAdmin,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
     return (

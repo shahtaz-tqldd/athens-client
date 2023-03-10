@@ -19,17 +19,20 @@ const PostPreviewCard = ({ post, index, postRefetch }) => {
             .then(() => {
                 toast.error('Your post is deleted!')
                 postRefetch()
+                setId(null)
                 refetch()
             })
     }
     return (
-        <div className='p-5 hover:shadow-lg' style={{ backgroundColor: colors[index % colors.length] }}>
-            <div className='flex text-xs gap-3'>
-                <span className='text-primary'>{date}</span>
-                <span className='text-error'>{time}</span>
+        <div className='p-5 flex flex-col justify-between hover:shadow-lg' style={{ backgroundColor: colors[index % colors.length] }}>
+            <div>
+                <div className='flex text-xs gap-3'>
+                    <span className='text-primary'>{date}</span>
+                    <span className='text-error'>{time}</span>
+                </div>
+                <h1 className='font-bold text-lg mb-1 leading-6'>{title}</h1>
+                <p>{content.length > 140 ? content?.slice(0, 140) + ' . . .' : content}</p>
             </div>
-            <h1 className='font-bold text-lg mb-1'>{title}</h1>
-            <p>{content.length > 140 ? content?.slice(0, 140) + ' . . .' : content}</p>
             <div className='flex justify-between items-center'>
                 <Link to={`/posts/${_id}`} className='text-sm text-primary pt-2 hover:underline'>Read Full Post</Link>
                 <div className='flex items-center gap-[10px] justify-end mt-2'>
@@ -37,6 +40,7 @@ const PostPreviewCard = ({ post, index, postRefetch }) => {
                     <label htmlFor='delete-modal' onClick={() => setId(_id)} className='btn rounded-sm text-xs normal-case text-white btn-sm btn-error'>Delete</label>
                 </div>
             </div>
+
             {
                 id &&
                 <DeleteModal handleDelete={handleDeletePost} id={id} />
