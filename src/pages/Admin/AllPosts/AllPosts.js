@@ -7,7 +7,7 @@ const AllPosts = () => {
   const { posts ,refetch } = useContext(AuthContext)
   const [id, setId] = useState(null)
   const handleDeletePost = (id) => {
-    fetch(`http://localhost:5000/posts/${id}`, {
+    fetch(`https://athens-server.vercel.app/posts/${id}`, {
       method: 'DELETE'
     })
       .then(res => res.json())

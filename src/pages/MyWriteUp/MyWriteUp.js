@@ -1,20 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useContext, useState } from 'react'
 import PostPreviewCard from '../../components/Cards/PostPreviewCard'
+import Loader from '../../components/Loader/Loader'
 import WritePostModal from '../../components/Modals/WritePostModal'
 import { AuthContext } from '../../context/AuthProvider'
 
 const MyWriteUp = () => {
     const [modal, setModal] = useState(false)
     const { user } = useContext(AuthContext)
-    const { data: myPosts = [], refetch } = useQuery({
+    const { data: myPosts = [], refetch, isLoading } = useQuery({
         queryKey: ['myPosts'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
+            const res = await fetch(`https://athens-server.vercel.app/my-posts?email=${user?.email}`)
             const data = await res.json()
             return data
         }
     })
+    if (isLoading) {
+        return <Loader />
+    }
     return (
         <section className='max-w-[1280px] mx-auto px-3 lg:gap-10 md:gap-10 pt-8'>
             <h1 className='text-4xl font-bold text-center'>My Write Up</h1>

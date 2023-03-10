@@ -41,14 +41,14 @@ const Login = () => {
   }
   return (
     <section className='flex lg:flex-row'>
-      <div className='lg:w-[45%] h-[100vh] bg-[#BAD7E9] flex items-center justify-center'>
+      <div className='lg:w-[45%] h-[100vh] bg-[#BAD7E9] lg:flex items-center justify-center hidden'>
         <img src="https://cdni.iconscout.com/illustration/premium/thumb/user-login-4268415-3551762.png?f=webp" alt="" className='w-2/3' data-aos="fade-up" />
       </div>
       <div className='lg:w-[55%] flex flex-col items-center justify-center'>
       <div className='scale-125 mb-8'>
             <Logo />
           </div>
-        <div className='bg-white w-[400px] rounded-xl shadow-lg p-8' data-aos="flip-right">
+        <div className='bg-white max-w-[400px] mx-3 rounded-xl shadow-lg p-8' data-aos="flip-right">
           <h2 className='text-xl font-bold text-center mb-4'>Login</h2>
           <form onSubmit={handleSubmit}>
             <input type="text" placeholder="Email" className="input input-bordered w-full" name="email" value={formData.email} onChange={handleInputChange} required />

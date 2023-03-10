@@ -22,7 +22,7 @@ const RightSideBar = () => {
   if (!user?.email) {
     return (
       <div className='bg-white p-6 sticky top-24 lg:block md:block hidden'>
-        <p>To write post in Athens Please <Link to='/login' className='text-primary'>Sign In</Link></p>
+        <p className='text-lg'>To write post in Athens Please <br/> <Link to='/login' className='text-primary'>Sign In</Link></p>
       </div>
     )
   }

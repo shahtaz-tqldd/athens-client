@@ -21,7 +21,7 @@ const PostUpdateModal = ({ post, setPostUpdate, postRefetch }) => {
     const handleSubmit = (event) => {
         event.preventDefault()
         const post = { ...formData, updatedAt }
-        fetch(`http://localhost:5000/posts/${_id}`, {
+        fetch(`https://athens-server.vercel.app/posts/${_id}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json'

@@ -36,7 +36,7 @@ const SavedPost = () => {
     const posts = []
     const { user } = useContext(AuthContext)
     useEffect(() => {
-        fetch(`http://localhost:5000/saved-post/${user?.email}`)
+        fetch(`https://athens-server.vercel.app/saved-post/${user?.email}`)
             .then(res => res.json())
             .then((data) => console.log(data))
     }, [user?.email])

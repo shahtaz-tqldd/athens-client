@@ -18,10 +18,10 @@ const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
     // LOAD ALL POSTS
-    const { data: posts = [], refetch } = useQuery({
+    const { data: posts = [], refetch, isLoading } = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/posts')
+            const res = await fetch('https://athens-server.vercel.app/posts')
             const data = await res.json()
             return data
         }
@@ -86,7 +86,7 @@ const AuthProvider = ({ children }) => {
     }, [user])
     // SENDING THE AUTH INFO 
     const authInfo = {
-        posts, refetch, isAdmin,
+        posts, refetch, isAdmin, postLoading: isLoading,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
     return (

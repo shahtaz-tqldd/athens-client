@@ -17,7 +17,7 @@ const PostCard = ({ post }) => {
     // SAVE THE POST IN THE DATABASE
     const handleSavedPost = () => {
         const savedPost = { postId: _id, savedBy: user?.email }
-        fetch('http://localhost:5000/saved-post/', {
+        fetch('https://athens-server.vercel.app/saved-post/', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
