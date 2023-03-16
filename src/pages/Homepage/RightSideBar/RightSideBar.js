@@ -56,7 +56,7 @@ const RightSideBar = () => {
           <span className='textBlue'>Admin Pannel</span>
         </Link>
       }
-      <label htmlFor="write-post-modal" onClick={() => setModal(true)} className='btn w-full text-white normal-case mt-6'>Write a Post +</label>
+      <label htmlFor="write-post-modal" onClick={() => setModal(true)} className='btn w-full text-white normal-case mt-6 rounded-sm'>Write a Post +</label>
       {
         modal && <WritePostModal setModal={setModal} />
       }

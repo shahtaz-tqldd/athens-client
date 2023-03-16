@@ -54,7 +54,7 @@ const Register = () => {
             <input type="text" placeholder="Your Full Name" className="input input-bordered w-full mb-2" name="fullName" value={formData.fullName} onChange={handleInputChange} required />
             <input type="email" placeholder="Email" className="input input-bordered w-full" name="email" value={formData.email} onChange={handleInputChange} required />
             <input type="password" placeholder="Password" className="input input-bordered w-full my-2" name="password" value={formData.password} onChange={handleInputChange} required />
-            <button className='btn btn-primary w-full text-white normal-case mt-4'>Register</button>
+            <button className='btn btn-primary w-full text-white normal-case mt-4 rounded-sm'>Register</button>
           </form>
           <GoogleLogin />
           <p className='mt-10'>Already have an account? <Link to='/login' className='textBlue'>Login</Link></p>

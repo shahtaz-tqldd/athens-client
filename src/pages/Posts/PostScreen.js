@@ -2,10 +2,12 @@ import React from 'react'
 import { useLoaderData } from 'react-router-dom'
 import { HiUser } from 'react-icons/hi'
 import '../../assets/styles/post-card.css'
+import useTitle from '../../hooks/useTitle'
 
 const PostScreen = () => {
     const post = useLoaderData()
     const { title, content, author, time, date } = post
+    useTitle(title)
     return (
         <section className='max-w-[900px] mx-auto px-3 mt-4'>
             <div className='bg-white p-10'>

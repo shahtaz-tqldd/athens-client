@@ -4,8 +4,10 @@ import PostPreviewCard from '../../components/Cards/PostPreviewCard'
 import Loader from '../../components/Loader/Loader'
 import WritePostModal from '../../components/Modals/WritePostModal'
 import { AuthContext } from '../../context/AuthProvider'
+import useTitle from '../../hooks/useTitle'
 
 const MyWriteUp = () => {
+    useTitle('My Write Up')
     const [modal, setModal] = useState(false)
     const { user } = useContext(AuthContext)
     const { data: myPosts = [], refetch, isLoading } = useQuery({

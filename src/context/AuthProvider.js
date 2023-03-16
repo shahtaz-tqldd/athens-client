@@ -17,6 +17,9 @@ export const AuthContext = createContext()
 const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
+
     // LOAD ALL POSTS
     const { data: posts = [], refetch, isLoading } = useQuery({
         queryKey: ['posts'],
@@ -27,8 +30,15 @@ const AuthProvider = ({ children }) => {
         }
     })
 
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+    // LOAD SAVED POSTS
+    const { data: savedPosts = [], refetch: refetchSavedPosts } = useQuery({
+        queryKey: ['savedPosts'],
+        queryFn: async () => {
+            const res = await fetch(`https://athens-server.vercel.app/saved-posts/${user?.email}`)
+            const data = await res.json()
+            return data
+        }
+    })
 
     // create new user
     const emailRegister = (email, password) => {
@@ -86,7 +96,7 @@ const AuthProvider = ({ children }) => {
     }, [user])
     // SENDING THE AUTH INFO 
     const authInfo = {
-        posts, refetch, isAdmin, postLoading: isLoading,
+        posts, refetch, isAdmin, postLoading: isLoading, savedPosts, refetchSavedPosts,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
     return (

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
+import { Link } from 'react-router-dom'
 import DeleteModal from '../../../components/Modals/DeleteModal'
 import { AuthContext } from '../../../context/AuthProvider'
 
 const AllPosts = () => {
-  const { posts ,refetch } = useContext(AuthContext)
+  const { posts, refetch } = useContext(AuthContext)
   const [id, setId] = useState(null)
   const handleDeletePost = (id) => {
     fetch(`https://athens-server.vercel.app/posts/${id}`, {
@@ -34,9 +35,9 @@ const AllPosts = () => {
             {
               posts?.map((post, index) => <tr key={index}>
                 <th>{index + 1}</th>
-                <td>{post?.title}</td>
-                <td>{post?.author}</td>
-                <td><label htmlFor='delete-modal' className='btn btn-error btn-sm text-white normal-case' onClick={() => setId(post?._id)}>Delete</label></td>
+                <td><Link className='hover:underline text-primary transition duration-300' to={`/posts/${post._id}`}>{post?.title}</Link></td>
+                <td><span className='text-xs'>{post?.author}</span></td>
+                <td><label htmlFor='delete-modal' className='btn btn-error btn-sm text-white normal-case rounded-sm' onClick={() => setId(post?._id)}>Delete</label></td>
               </tr>
               )
             }

@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthProvider'
@@ -7,22 +7,29 @@ import { AuthContext } from '../../context/AuthProvider'
 const WritePostModal = ({ setModal }) => {
     const { user, refetch } = useContext(AuthContext)
     const navigate = useNavigate()
-    const [formData, setFormData] = useState({
-        title: '',
-        content: '',
-    })
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
+    const [btnDisable, setBtnDisable] = useState(true)
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target
-        setFormData({ ...formData, [name]: value })
+    const handleTitleInput = (event) => {
+        setTitle(event.target.value)
     }
+    const handleContentInput = (event) => {
+        setContent(event.target.value)
+    }
+
+    useEffect(() => {
+        if (title && content) {
+            setBtnDisable(false)
+        }
+    }, [title, content])
     const date = format(new Date(), 'PP')
     const time = format(new Date(), 'p')
     const createdAt = new Date()
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        const post = { ...formData, author: user?.displayName, authorEmail:user?.email, date, time, createdAt }
+        const post = { title, content, author: user?.displayName, authorEmail: user?.email, date, time, createdAt }
         fetch('https://athens-server.vercel.app/posts', {
             method: 'POST',
             headers: {
@@ -35,7 +42,8 @@ const WritePostModal = ({ setModal }) => {
                 toast.success("You just made a post!")
                 navigate('/')
                 setModal(false)
-                setFormData({ title: '', content: '' })
+                setTitle('')
+                setContent('')
                 refetch()
             })
     }
@@ -49,24 +57,23 @@ const WritePostModal = ({ setModal }) => {
                         ✕
                     </label>
                     <h1 className='font-bold mb-3'>Write Your Thoughts</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center">
                         <input
                             type="text"
                             placeholder="title"
                             className="input input-bordered w-full mb-2"
                             name="title"
-                            value={formData.title}
-                            onChange={handleInputChange}
+                            onInput={handleTitleInput}
                         />
                         <textarea
                             className="textarea textarea-bordered w-full h-40"
                             placeholder="write your words"
                             name="content"
-                            value={formData.content}
-                            onChange={handleInputChange}
+                            onInput={handleContentInput}
                         ></textarea>{' '}
                         <br />
-                        <button type="submit" className="btn btn-wide mt-4 normal-case text-white">
+
+                        <button disabled={btnDisable} type="submit" className="btn btn-wide mt-4 normal-case text-white rounded-sm">
                             Post
                         </button>
                     </form>

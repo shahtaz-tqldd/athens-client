@@ -41,10 +41,10 @@ const PostUpdateModal = ({ post, setPostUpdate, postRefetch }) => {
         <div>
             <input type="checkbox" id="post-update-modal" className="modal-toggle" />
             <div className="modal">
-                <div className="modal-box relative">
+                <div className="modal-box relative rounded-sm">
                     <label onClick={() => setPostUpdate(null)} htmlFor="post-update-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                     <h1 className='font-bold mb-3'>Update Your Post</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center">
                         <input
                             type="text"
                             placeholder="title"
@@ -61,7 +61,7 @@ const PostUpdateModal = ({ post, setPostUpdate, postRefetch }) => {
                             onChange={handleInputChange}
                         ></textarea>{' '}
                         <br />
-                        <button type="submit" className="btn btn-wide mt-4 normal-case text-white">
+                        <button type="submit" className="btn btn-wide mt-4 normal-case text-white rounded-sm">
                             Update
                         </button>
                     </form>
