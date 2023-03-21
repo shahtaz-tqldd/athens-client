@@ -37,7 +37,7 @@ const SavedPostCard = ({ post, index }) => {
 
             {
                 id &&
-                <DeleteModal handleDelete={handleDeleteSavedPost} id={id} />
+                <DeleteModal handleDelete={handleDeleteSavedPost} id={id} text="Are you sure want to remove this saved post?" />
             }
         </div>
     )

@@ -43,7 +43,7 @@ const PostPreviewCard = ({ post, index, postRefetch }) => {
 
             {
                 id &&
-                <DeleteModal handleDelete={handleDeletePost} id={id} />
+                <DeleteModal handleDelete={handleDeletePost} id={id} text="Are you sure want to remove this post?" />
             }
             {
                 postUpdate?._id &&
