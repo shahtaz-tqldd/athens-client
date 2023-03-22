@@ -18,6 +18,7 @@ const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
+    const [search, setSearch] = useState('')
     const [loading, setLoading] = useState(true)
 
     // LOAD ALL POSTS
@@ -25,6 +26,16 @@ const AuthProvider = ({ children }) => {
         queryKey: ['posts'],
         queryFn: async () => {
             const res = await fetch('http://localhost:5000/posts')
+            const data = await res.json()
+            return data
+        }
+    })
+    console.log(search)
+    // LOAD SEARCH POSTS
+    const { data: searchResult = [], refetch: searchRefetch, isLoading: searchLoading } = useQuery({
+        queryKey: ['posts', 'search', search],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/search/posts?search=${search}`)
             const data = await res.json()
             return data
         }
@@ -98,7 +109,8 @@ const AuthProvider = ({ children }) => {
 
     // SENDING THE AUTH INFO 
     const authInfo = {
-        posts, refetch, isAdmin, postLoading: isLoading, savedPosts, refetchSavedPosts,
+        posts, refetch, isAdmin, postLoading: isLoading, savedPosts, refetchSavedPosts, 
+        search, setSearch, searchResult,  searchRefetch, searchLoading,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
 

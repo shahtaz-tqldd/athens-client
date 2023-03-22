@@ -11,7 +11,7 @@ const MyWriteUp = () => {
     const [modal, setModal] = useState(false)
     const { user } = useContext(AuthContext)
     const { data: myPosts = [], refetch, isLoading } = useQuery({
-        queryKey: ['myPosts'],
+        queryKey: ['email'],
         queryFn: async () => {
             const res = await fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
             const data = await res.json()

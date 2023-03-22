@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast'
 import { HiUser } from 'react-icons/hi'
 import { useLocation } from 'react-router-dom'
 import '../../assets/styles/post-card.css'
+import Loader from '../../components/Loader/Loader'
 import { AuthContext } from '../../context/AuthProvider'
 import Opinion from '../../pages/Posts/Opinion'
 
@@ -12,7 +13,7 @@ const PostScreen = () => {
     const location = useLocation()
     const [post, setPost] = useState([])
     const id = location?.pathname?.split('/')[2]
-    const { refetch: refetchPost } = useQuery({
+    const { refetch: refetchPost, isLoading } = useQuery({
         queryKey: ['savedPosts'],
         queryFn: async () => {
             const res = await fetch(`http://localhost:5000/posts/${id}`)
@@ -68,7 +69,9 @@ const PostScreen = () => {
             console.error(err);
         }
     }
-
+    if(isLoading){
+        return <Loader/>
+    }
     return (
         <section className={`max-w-[800px] mt-6 mx-auto bg-white p-6 relative ${user?.email && 'pb-0'}`}>
             <div className='flex text-xs gap-3'>

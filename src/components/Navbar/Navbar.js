@@ -1,21 +1,30 @@
 import React, { useContext } from 'react'
 import { toast } from 'react-hot-toast'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthProvider'
 import Logo from '../Logo/Logo'
 
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext)
+    const { user, logout, setSearch, searchRefetch, isAdmin } = useContext(AuthContext)
     const handleLogout = () => {
         logout()
             .then(() => { toast.error("You are logged out") })
             .catch(err => console.error(err))
     }
     const navItems = <>
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/'>Posts</Link></li>
-        <li><Link to='/'>Search</Link></li>
+        <li><Link to='/my-write-up'>My Write Up</Link></li>
+        <li><Link to='/saved-post'>Saved Post</Link></li>
+        <li><Link to='/search/posts'>Search Post</Link></li>
+        {isAdmin && <li><Link to='/admin'>Admin Dashboard</Link></li>}
     </>
+    const navigate = useNavigate()
+    const handleSearch = (e) => {
+        e.preventDefault()
+        const search = e.target.search.value
+        setSearch(search)
+        navigate('/search/posts')
+        searchRefetch();
+    }
 
     return (
         <header className=" fixed top-0 left-0 right-0 bg-white shadow-md z-10">
@@ -32,7 +41,9 @@ const Navbar = () => {
                     <Logo />
                 </div>
                 <div className="navbar-center hidden lg:flex">
-                    <input type="text" placeholder="Search Post" className="input input-bordered w-[300px] bg-[#ECF2FF]" />
+                    <form onSubmit={handleSearch}>
+                        <input type="text" name="search" placeholder="Search Post" className="input input-bordered w-[300px] bg-[#ECF2FF]" />
+                    </form>
                 </div>
                 <div className="navbar-end">
                     {

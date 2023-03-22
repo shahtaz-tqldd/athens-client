@@ -6,6 +6,7 @@ import Login from "../pages/LoginRegister/Login";
 import Register from "../pages/LoginRegister/Register";
 import MyWriteUp from "../pages/MyWriteUp/MyWriteUp";
 import PostScreen from "../pages/Posts/PostScreen";
+import SearchPost from "../pages/Posts/SearchPost";
 import SavedPost from "../pages/SavedPost/SavedPost";
 import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
@@ -22,6 +23,10 @@ export const routes = createBrowserRouter([
             {
                 path: '/posts/:id',
                 element: <PostScreen />
+            },
+            {
+                path: '/search/posts',
+                element: <SearchPost />
             },
 
             {
