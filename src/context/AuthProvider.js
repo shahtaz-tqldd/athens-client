@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
     const { data: posts = [], refetch, isLoading } = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
-            const res = await fetch('https://athens-server.vercel.app/posts')
+            const res = await fetch('http://localhost:5000/posts')
             const data = await res.json()
             return data
         }
@@ -34,7 +34,7 @@ const AuthProvider = ({ children }) => {
     const { data: savedPosts = [], refetch: refetchSavedPosts } = useQuery({
         queryKey: ['savedPosts'],
         queryFn: async () => {
-            const res = await fetch(`https://athens-server.vercel.app/saved-posts/${user?.email}`)
+            const res = await fetch(`http://localhost:5000/posts/save/${user?.email}`)
             const data = await res.json()
             return data
         }
@@ -83,6 +83,7 @@ const AuthProvider = ({ children }) => {
         })
         return () => unsubscribe()
     }, [])
+
     //SETTING ADMIN AS A HARD CODE
     const [isAdmin, setIsAdmin] = useState(false)
     useEffect(() => {
@@ -94,11 +95,13 @@ const AuthProvider = ({ children }) => {
             setIsAdmin(true)
         } else { setIsAdmin(false) }
     }, [user])
+
     // SENDING THE AUTH INFO 
     const authInfo = {
         posts, refetch, isAdmin, postLoading: isLoading, savedPosts, refetchSavedPosts,
         emailRegister, emailLogin, updateUser, logout, forgotPassword, googleLogin, user, loading
     }
+
     return (
         <AuthContext.Provider value={authInfo}>
             {children}

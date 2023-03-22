@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { HiUser } from 'react-icons/hi'
 import '../../assets/styles/post-card.css'
@@ -6,49 +7,58 @@ import { AuthContext } from '../../context/AuthProvider'
 import Opinion from '../../pages/Posts/Opinion'
 
 const PostCard = ({ post }) => {
-    const { title, content, date, time, author, _id, img } = post
+    const { user, refetch, refetchSavedPosts } = useContext(AuthContext);
+    const { title, content, date, time, author, _id, img, agrees, saves } = post
+
+    const [agree, setAgree] = useState(agrees?.length)
+    const agreed = agrees?.includes(user?.email) ? true : false
+    const isSaved = saves?.includes(user?.email) ? true : false
+
     const [opinion, setOpinion] = useState(false)
-
-    const { user, savedPosts, refetchSavedPosts } = useContext(AuthContext);
-    const [isSaved, setIsSaved] = useState(false);
-
-    useEffect(() => {
-        setIsSaved(savedPosts.some(savedPost => savedPost._id === _id));
-    }, [savedPosts, _id]);
 
     // EXPAND THE CARD TO READ MORE
     const [expanded, setExpanded] = useState(false)
     const toggleExpanded = () => {
         setExpanded(!expanded)
     }
+    // AGREE TO THE POST
+    const handleAgree = async () => {
+        try {
+            const res = await axios.post(`http://localhost:5000/posts/${_id}/agree`, {
+                userId: user?.email
+            });
+
+            if (res.data.message === 'Agreed to the post') {
+                setAgree(agree + 1);
+            }
+            else if (res.data.message === 'Agree removed') {
+                setAgree(agree - 1);
+            }
+            refetch()
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     // SAVE THE POST IN THE DATABASE
-    const handleSavedPost = () => {
-        const savedPost = { postId: _id, savedBy: user?.email, savedAt: new Date() }
-        fetch(`https://athens-server.vercel.app/saved-posts/${_id}`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(savedPost)
-        })
-            .then(res => res.json())
-            .then(() => {
-                toast.success("This post is saved!")
-                refetchSavedPosts()
-            })
+    const handleSavePost = async () => {
+        try {
+            const res = await axios.post(`http://localhost:5000/posts/${_id}/save`, {
+                userId: user?.email
+            });
+            if(res.data.message === 'Saved post removed'){
+                toast.error(res.data.message)
+            }
+            else if(res.data.message === 'Post is Saved'){
+                toast.success(res.data.message)
+            }
+            refetch()
+            refetchSavedPosts()
+        } catch (err) {
+            console.error(err);
+        }
     }
-    // DELETE SAVED POST
-    const handleDeleteSavedPost = () => {
-        fetch(`https://athens-server.vercel.app/saved-posts?postId=${_id}&email=${user?.email}`, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then(() => {
-                toast.error('Saved post removed!')
-                refetchSavedPosts()
-            })
-    }
+
     return (
         <div className={`bg-white p-6 relative ${user?.email && 'pb-0'}`}>
 
@@ -68,18 +78,20 @@ const PostCard = ({ post }) => {
             {
                 user?.email &&
                 <>
-                    <hr className='mt-4' />
+                    {agrees?.length > 0 && <p className='text-xs mt-4'>{agrees?.length} {agrees?.length > 1 ? 'people' : 'person'} agreed</p>}
+                    <hr className='mt-2' />
                     <div className=''>
                         <div className='grid grid-cols-3 text-xs'>
-                            <button className='btn-ghost flex justify-center my-2 p-2 flex items-center gap-2'>
+                            <button onClick={handleAgree} className='btn-ghost flex justify-center my-2 p-2 flex items-center gap-2'>
                                 <lord-icon
                                     target="button"
-                                    src="https://cdn.lordicon.com/egiwmiit.json"
+                                    src={!agreed ? "https://cdn.lordicon.com/egiwmiit.json" : "https://cdn.lordicon.com/yqzmiobz.json"}
                                     trigger="hover"
                                     style={{ width: "20px", height: "20px" }}>
                                 </lord-icon>
-                                Agree
+                                {!agree ? 'Agree' : 'Agreed'}
                             </button>
+
                             <button onClick={() => setOpinion(!opinion)} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
                                 <lord-icon
                                     target="button"
@@ -89,27 +101,17 @@ const PostCard = ({ post }) => {
                                 </lord-icon>
                                 Opinion
                             </button>
-                            {!isSaved ?
-                                <button onClick={handleSavedPost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
-                                    <lord-icon
-                                        target="button"
-                                        src="https://cdn.lordicon.com/gigfpovs.json"
-                                        trigger="hover"
-                                        style={{ width: "20px", height: "20px" }}>
-                                    </lord-icon>
-                                    Save
-                                </button> :
-                                <button onClick={handleDeleteSavedPost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
-                                    <lord-icon
-                                        target="button"
-                                        src="https://cdn.lordicon.com/eanmttmw.json"
-                                        colors="primary:#222"
-                                        trigger="hover"
-                                        style={{ width: "20px", height: "20px" }}>
-                                    </lord-icon>
-                                    Saved
-                                </button>
-                            }
+
+                            <button onClick={handleSavePost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
+                                <lord-icon
+                                    target="button"
+                                    src={!isSaved ? "https://cdn.lordicon.com/gigfpovs.json" : "https://cdn.lordicon.com/eanmttmw.json"}
+                                    trigger="hover"
+                                    style={{ width: "20px", height: "20px" }}>
+                                </lord-icon>
+                                {!isSaved ? 'Save' : 'Saved'}
+                            </button>
+
                         </div>
                         {opinion &&
                             <Opinion postId={_id} />

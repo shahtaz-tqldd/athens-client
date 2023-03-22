@@ -21,9 +21,9 @@ export const routes = createBrowserRouter([
             },
             {
                 path: '/posts/:id',
-                loader: async ({ params }) => await fetch(`https://athens-server.vercel.app/posts/${params.id}`),
                 element: <PostScreen />
             },
+
             {
                 path: '/saved-post',
                 element: <PrivateRoute><SavedPost /></PrivateRoute>

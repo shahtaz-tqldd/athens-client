@@ -8,7 +8,7 @@ const Opinion = ({ postId }) => {
     const { data: opinions = [], refetch: refetchOpinion } = useQuery({
         queryKey: ['opinions'],
         queryFn: async () => {
-            const res = await fetch(`https://athens-server.vercel.app/opinion/${postId}`)
+            const res = await fetch(`http://localhost:5000/opinion/${postId}`)
             const data = await res.json()
             return data
         }
@@ -17,7 +17,7 @@ const Opinion = ({ postId }) => {
         event.preventDefault()
         const opinion = event.target.opinion.value
         const opinionInfo = { opinion, postId, opinionByEmail: user?.email, opinionByName: user?.displayName, opinionAt: new Date() }
-        fetch(`https://athens-server.vercel.app/opinion/${postId}`, {
+        fetch(`http://localhost:5000/opinion/${postId}`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
@@ -5,20 +6,26 @@ import { AuthContext } from '../../context/AuthProvider'
 import DeleteModal from '../Modals/DeleteModal'
 
 const SavedPostCard = ({ post, index }) => {
-    const { refetchSavedPosts, user } = useContext(AuthContext)
+    const { refetchSavedPosts, refetch, user } = useContext(AuthContext)
     const { title, content, time, date, _id } = post
     const [id, setId] = useState(null)
-
-    const handleDeleteSavedPost = (id) => {
-        fetch(`https://athens-server.vercel.app/saved-posts?postId=${id}&email=${user?.email}`, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then(() => {
-                toast.error('Your post is deleted!')
-                refetchSavedPosts()
-                setId(null)
-            })
+    const handleDeleteSavedPost = async (id) => {
+        try {
+            const res = await axios.post(`http://localhost:5000/posts/${id}/save`, {
+                userId: user?.email
+            });
+            if (res.data.message === 'Saved post removed') {
+                toast.error(res.data.message)
+            }
+            else if (res.data.message === 'Post is Saved') {
+                toast.success(res.data.message)
+            }
+            refetch()
+            refetchSavedPosts()
+            setId(null)
+        } catch (err) {
+            console.error(err);
+        }
     }
     return (
         <div className='p-5 flex flex-col justify-between bg-white hover:shadow-lg'>

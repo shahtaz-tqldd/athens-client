@@ -1,79 +1,104 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { useLoaderData } from 'react-router-dom'
-import { HiUser } from 'react-icons/hi'
-import '../../assets/styles/post-card.css'
-import useTitle from '../../hooks/useTitle'
-import { AuthContext } from '../../context/AuthProvider'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast'
-import Opinion from './Opinion'
+import { HiUser } from 'react-icons/hi'
+import { useLocation } from 'react-router-dom'
+import '../../assets/styles/post-card.css'
+import { AuthContext } from '../../context/AuthProvider'
+import Opinion from '../../pages/Posts/Opinion'
 
 const PostScreen = () => {
-    const post = useLoaderData()
-    const { title, content, author, time, date, img, _id } = post
-    const { user, savedPosts, refetchSavedPosts } = useContext(AuthContext);
-    const [isSaved, setIsSaved] = useState(false);
+    const location = useLocation()
+    const [post, setPost] = useState([])
+    const id = location?.pathname?.split('/')[2]
+    const { refetch: refetchPost } = useQuery({
+        queryKey: ['savedPosts'],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/posts/${id}`)
+            const data = await res.json()
+            setPost(data)
+        }
+    })
+    const { user, refetch, refetchSavedPosts } = useContext(AuthContext);
+    const { title, content, date, time, author, _id, img, agrees, saves } = post
+
+    const [agree, setAgree] = useState(agrees?.length)
+    const agreed = agrees?.includes(user?.email) ? true : false
+    const isSaved = saves?.includes(user?.email) ? true : false
+
     const [opinion, setOpinion] = useState(false)
 
-    useEffect(() => {
-        setIsSaved(savedPosts.some(savedPost => savedPost._id === _id));
-    }, [savedPosts, _id]);
+    // AGREE TO THE POST
+    const handleAgree = async () => {
+        try {
+            const res = await axios.post(`http://localhost:5000/posts/${_id}/agree`, {
+                userId: user?.email
+            });
+
+            if (res.data.message === 'Agreed to the post') {
+                setAgree(agree + 1);
+            }
+            else if (res.data.message === 'Agree removed') {
+                setAgree(agree - 1);
+            }
+            refetch()
+            refetchPost()
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // SAVE THE POST IN THE DATABASE
-    const handleSavedPost = () => {
-        const savedPost = { postId: _id, savedBy: user?.email, savedAt: new Date() }
-        fetch(`https://athens-server.vercel.app/saved-posts/${_id}`, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(savedPost)
-        })
-            .then(res => res.json())
-            .then(() => {
-                toast.success("This post is saved!")
-                refetchSavedPosts()
-            })
+    const handleSavePost = async () => {
+        try {
+            const res = await axios.post(`http://localhost:5000/posts/${_id}/save`, {
+                userId: user?.email
+            });
+            if (res.data.message === 'Saved post removed') {
+                toast.error(res.data.message)
+            }
+            else if (res.data.message === 'Post is Saved') {
+                toast.success(res.data.message)
+            }
+            refetch()
+            refetchPost()
+            refetchSavedPosts()
+        } catch (err) {
+            console.error(err);
+        }
     }
-    // DELETE SAVED POST
-    const handleDeleteSavedPost = () => {
-        fetch(`https://athens-server.vercel.app/saved-posts?postId=${_id}&email=${user?.email}`, {
-            method: 'DELETE'
-        })
-            .then(res => res.json())
-            .then(() => {
-                toast.error('Saved post removed!')
-                refetchSavedPosts()
-            })
-    }
-    useTitle(title)
+
     return (
-        <section className='max-w-[800px] mx-auto px-3 mt-4'>
+        <section className={`max-w-[800px] mt-6 mx-auto bg-white p-6 relative ${user?.email && 'pb-0'}`}>
+            <div className='flex text-xs gap-3'>
+                <span className='text-primary'>{date}</span>
+                <span className='text-error'>{time}</span>
+            </div>
+            <h2 className='font-bold text-2xl my-1'>{title}</h2>
+            <span className='text-sm flex items-center gap-[6px]'><HiUser />{author}</span>
+            <div className='my-3' dangerouslySetInnerHTML={{ __html: content }}></div>
 
-            <div className={`bg-white p-8 relative ${user?.email && 'pb-0'}`}>
-                <div className='flex text-xs gap-3'>
-                    <span className='text-primary'>{date}</span>
-                    <span className='text-error'>{time}</span>
-                </div>
-                <h2 className='font-bold text-2xl mt-1'>{title}</h2>
-                <span className='text-sm flex items-center gap-[6px]'><HiUser />{author}</span>
-                <div className="mt-3" dangerouslySetInnerHTML={{ __html: content }}></div>
+            {img && <img src={img} alt='' className='mt-4 w-full max-h-[800px] object-cover' />}
 
-                {img && <img src={img} alt="" className='mt-4 w-full max-h-[800px] object-contain' />}
-
-                {
-                    user?.email &&
-                    <>
-                        <hr className='mt-4' />
+            {
+                user?.email &&
+                <>
+                    {agrees?.length > 0 && <p className='text-xs mt-4'>{agrees?.length} {agrees?.length > 1 ? 'people' : 'person'} agreed</p>}
+                    <hr className='mt-2' />
+                    <div className=''>
                         <div className='grid grid-cols-3 text-xs'>
-                            <button className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
+                            <button onClick={handleAgree} className='btn-ghost flex justify-center my-2 p-2 flex items-center gap-2'>
                                 <lord-icon
                                     target="button"
-                                    src="https://cdn.lordicon.com/egiwmiit.json"
+                                    src={!agreed ? "https://cdn.lordicon.com/egiwmiit.json" : "https://cdn.lordicon.com/yqzmiobz.json"}
                                     trigger="hover"
                                     style={{ width: "20px", height: "20px" }}>
                                 </lord-icon>
-                                Agree
+                                {!agree ? 'Agree' : 'Agreed'}
                             </button>
-                            <button onClick={()=>setOpinion(!opinion)} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
+
+                            <button onClick={() => setOpinion(!opinion)} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
                                 <lord-icon
                                     target="button"
                                     src="https://cdn.lordicon.com/hpivxauj.json"
@@ -82,35 +107,26 @@ const PostScreen = () => {
                                 </lord-icon>
                                 Opinion
                             </button>
-                            {!isSaved ?
-                                <button onClick={handleSavedPost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
-                                    <lord-icon
-                                        target="button"
-                                        src="https://cdn.lordicon.com/gigfpovs.json"
-                                        trigger="hover"
-                                        style={{ width: "20px", height: "20px" }}>
-                                    </lord-icon>
-                                    Save
-                                </button> :
-                                <button onClick={handleDeleteSavedPost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
-                                    <lord-icon
-                                        target="button"
-                                        src="https://cdn.lordicon.com/eanmttmw.json"
-                                        colors="primary:#222"
-                                        trigger="hover"
-                                        style={{ width: "20px", height: "20px" }}>
-                                    </lord-icon>
-                                    Saved
-                                </button>
-                            }
+
+                            <button onClick={handleSavePost} className='btn-ghost flex justify-center m-2 p-2 flex items-center gap-2'>
+                                <lord-icon
+                                    target="button"
+                                    src={!isSaved ? "https://cdn.lordicon.com/gigfpovs.json" : "https://cdn.lordicon.com/eanmttmw.json"}
+                                    trigger="hover"
+                                    style={{ width: "20px", height: "20px" }}>
+                                </lord-icon>
+                                {!isSaved ? 'Save' : 'Saved'}
+                            </button>
+
                         </div>
-                    </>
-                }
-                {opinion &&
-                    <Opinion postId={_id} />
-                }
-            </div>
-        </section>
+                        {opinion &&
+                            <Opinion postId={_id} />
+                        }
+                    </div>
+                </>
+            }
+
+        </section >
     )
 }
 
