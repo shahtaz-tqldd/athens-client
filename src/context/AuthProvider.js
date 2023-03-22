@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
     const { data: posts = [], refetch, isLoading } = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
-            const res = await fetch('http://localhost:5000/posts')
+            const res = await fetch('https://athens-server.vercel.app/posts')
             const data = await res.json()
             return data
         }
@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
     const { data: searchResult = [], refetch: searchRefetch, isLoading: searchLoading } = useQuery({
         queryKey: ['posts', 'search', search],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/search/posts?search=${search}`)
+            const res = await fetch(`https://athens-server.vercel.app/search/posts?search=${search}`)
             const data = await res.json()
             return data
         }
@@ -45,7 +45,7 @@ const AuthProvider = ({ children }) => {
     const { data: savedPosts = [], refetch: refetchSavedPosts } = useQuery({
         queryKey: ['savedPosts'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/posts/save/${user?.email}`)
+            const res = await fetch(`https://athens-server.vercel.app/posts/save/${user?.email}`)
             const data = await res.json()
             return data
         }

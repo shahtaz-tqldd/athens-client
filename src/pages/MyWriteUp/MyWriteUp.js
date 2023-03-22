@@ -13,7 +13,7 @@ const MyWriteUp = () => {
     const { data: myPosts = [], refetch, isLoading } = useQuery({
         queryKey: ['email'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/my-posts?email=${user?.email}`)
+            const res = await fetch(`https://athens-server.vercel.app/my-posts?email=${user?.email}`)
             const data = await res.json()
             return data
         }

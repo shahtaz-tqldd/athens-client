@@ -10,7 +10,7 @@ const OpinionCard = ({ content, refetchOpinion }) => {
     const [update, setUpdate] = useState(false)
     const { opinion, opinionByEmail, opinionByName, _id } = content
     const handleDeleteOpinion = id => {
-        fetch(`http://localhost:5000/opinion/${id}`, {
+        fetch(`https://athens-server.vercel.app/opinion/${id}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
@@ -26,7 +26,7 @@ const OpinionCard = ({ content, refetchOpinion }) => {
             updatedOpinion,
             updatedAt: new Date()
         }
-        fetch(`http://localhost:5000/opinion/${_id}`, {
+        fetch(`https://athens-server.vercel.app/opinion/${_id}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json'

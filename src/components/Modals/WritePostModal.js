@@ -47,7 +47,7 @@ const WritePostModal = ({ setModal }) => {
                 if (imgData.success) {
                     const img = imgData.data.url
                     const postBody = { ...post, img }
-                    fetch('http://localhost:5000/posts', {
+                    fetch('https://athens-server.vercel.app/posts', {
                         method: 'POST',
                         headers: {
                             'Content-type': 'application/json'

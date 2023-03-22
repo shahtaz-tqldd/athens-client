@@ -16,7 +16,7 @@ const PostScreen = () => {
     const { refetch: refetchPost, isLoading } = useQuery({
         queryKey: ['savedPosts'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/posts/${id}`)
+            const res = await fetch(`https://athens-server.vercel.app/posts/${id}`)
             const data = await res.json()
             setPost(data)
         }
@@ -33,7 +33,7 @@ const PostScreen = () => {
     // AGREE TO THE POST
     const handleAgree = async () => {
         try {
-            const res = await axios.post(`http://localhost:5000/posts/${_id}/agree`, {
+            const res = await axios.post(`https://athens-server.vercel.app/posts/${_id}/agree`, {
                 userId: user?.email
             });
 
@@ -53,7 +53,7 @@ const PostScreen = () => {
     // SAVE THE POST IN THE DATABASE
     const handleSavePost = async () => {
         try {
-            const res = await axios.post(`http://localhost:5000/posts/${_id}/save`, {
+            const res = await axios.post(`https://athens-server.vercel.app/posts/${_id}/save`, {
                 userId: user?.email
             });
             if (res.data.message === 'Saved post removed') {

@@ -20,7 +20,7 @@ const SearchPost = () => {
         <section className='max-w-[1280px] mx-auto px-3 flex lg:flex-row md:flex-row flex-col lg:gap-10 md:gap-10 gap-4 pt-8'>
             {/* LEFT SIDEBAR */}
             <div className='lg:w-[25%]'>
-                <form onSubmit={handleSearch} className="lg:hidden md:hidden block">
+                <form onSubmit={handleSearch} className="lg:hidden block">
                     <input type="text" name="search" placeholder="Search Post" className="input input-bordered w-full mb-4 bg-[#ECF2FF]" />
                 </form>
                 <h1 className='lg:text-3xl md:text-xl text-md font-bold'>Search Result</h1>

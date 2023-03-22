@@ -24,7 +24,7 @@ const PostCard = ({ post }) => {
     // AGREE TO THE POST
     const handleAgree = async () => {
         try {
-            const res = await axios.post(`http://localhost:5000/posts/${_id}/agree`, {
+            const res = await axios.post(`https://athens-server.vercel.app/posts/${_id}/agree`, {
                 userId: user?.email
             });
 
@@ -43,7 +43,7 @@ const PostCard = ({ post }) => {
     // SAVE THE POST IN THE DATABASE
     const handleSavePost = async () => {
         try {
-            const res = await axios.post(`http://localhost:5000/posts/${_id}/save`, {
+            const res = await axios.post(`https://athens-server.vercel.app/posts/${_id}/save`, {
                 userId: user?.email
             });
             if(res.data.message === 'Saved post removed'){

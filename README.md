@@ -5,13 +5,15 @@ A MERN Stack website for users to post and performs Basic CRUD operation
 https://athens-eb3bf.web.app
 
 # Completion Date
-Mar 09, 2023 - Mar 10, 2023
+Mar 09, 2023 - Mar 22, 2023
 
 # Key Features of the Project
 - User can open account with email and password or with google
-- User can read other users post
-- User can post and update or delete their post
-- User can save their favourite post
+- read other users post
+- write, update or delete their own post (CRUD operation)
+- user can comment on posts and update or delete their own comment
+- User can Like a post or save post for letter
+- Search post with keyword they want in post title or post body
 
 # Technology Stack
 ## Frontend
@@ -33,3 +35,7 @@ Mar 09, 2023 - Mar 10, 2023
 - Lordicons
 - AOS
 - react hot toast
+
+## Hosting
+- Frontend : Firebase
+- Backend : Vercel

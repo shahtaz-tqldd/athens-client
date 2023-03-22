@@ -11,7 +11,7 @@ const SavedPostCard = ({ post, index }) => {
     const [id, setId] = useState(null)
     const handleDeleteSavedPost = async (id) => {
         try {
-            const res = await axios.post(`http://localhost:5000/posts/${id}/save`, {
+            const res = await axios.post(`https://athens-server.vercel.app/posts/${id}/save`, {
                 userId: user?.email
             });
             if (res.data.message === 'Saved post removed') {
